@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Package, Box } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { useUpdateProduct } from '../hooks/useProducts';
 import { Product } from '../types';
 
 interface EditProductProps {
@@ -10,7 +10,7 @@ interface EditProductProps {
 }
 
 export function EditProduct({ product, onSuccess, onCancel }: EditProductProps) {
-  const [loading, setLoading] = useState(false);
+  const { mutate: updateProduct, isPending: loading } = useUpdateProduct();
   const [formData, setFormData] = useState({
     name: product.name,
     description: product.description || '',
@@ -21,29 +21,26 @@ export function EditProduct({ product, onSuccess, onCancel }: EditProductProps) 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
 
-    try {
-      const { error } = await supabase
-        .from('products')
-        .update({
-          name: formData.name,
-          description: formData.description || null,
-          unit_selling_price: parseFloat(formData.unit_selling_price),
-          cost_per_batch: parseFloat(formData.cost_per_batch),
-          units_per_batch: parseInt(formData.units_per_batch),
-        })
-        .eq('id', product.id);
-
-      if (error) throw error;
-
-      onSuccess();
-    } catch (error) {
-      console.error('Error updating product:', error);
-      alert('Failed to update product. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    updateProduct(
+      {
+        id: product.id,
+        name: formData.name,
+        description: formData.description || null,
+        unit_selling_price: parseFloat(formData.unit_selling_price),
+        cost_per_batch: parseFloat(formData.cost_per_batch),
+        units_per_batch: parseInt(formData.units_per_batch),
+      },
+      {
+        onSuccess: () => {
+          onSuccess();
+        },
+        onError: (error: any) => {
+          console.error('Error updating product:', error);
+          alert('Failed to update product. Please try again.');
+        }
+      }
+    );
   };
 
   const oldCostPerUnit = product.cost_per_batch / product.units_per_batch;

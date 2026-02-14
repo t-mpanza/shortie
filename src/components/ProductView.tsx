@@ -208,10 +208,10 @@ export function ProductView({ product, onClose }: ProductViewProps) {
                           </div>
                           <div className="text-right">
                             <div className="font-semibold text-green-600">
-                              R{parseFloat(purchase.total_cost).toFixed(2)}
+                              R{purchase.total_cost.toFixed(2)}
                             </div>
                             <div className="text-xs text-gray-500">
-                              R{parseFloat(purchase.cost_per_batch).toFixed(2)}/batch
+                              R{purchase.cost_per_batch.toFixed(2)}/batch
                             </div>
                           </div>
                         </div>
