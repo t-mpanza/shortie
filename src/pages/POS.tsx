@@ -5,6 +5,7 @@ import { useRecordSale } from '../hooks/useSales';
 import { Product } from '../types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { clsx } from 'clsx';
+import { Link } from 'react-router-dom';
 
 interface CartItem {
     product: Product;
@@ -113,6 +114,14 @@ export function POSPage() {
                         <div className="col-span-full text-center py-20 flex flex-col items-center">
                             <Search className="w-12 h-12 text-gray-300 mb-2" />
                             <span className="text-gray-400 font-medium">No products found</span>
+                            {(products?.length || 0) === 0 && (
+                                <Link
+                                    to="/inventory?add=1"
+                                    className="mt-4 bg-blue-600 text-white px-4 py-2.5 rounded-xl font-semibold hover:bg-blue-700 transition-colors"
+                                >
+                                    Add Your First Product
+                                </Link>
+                            )}
                         </div>
                     ) : (
                         filteredProducts?.map((product) => (

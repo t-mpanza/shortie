@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Plus, Search, Edit2, PackagePlus } from 'lucide-react';
 import { useProducts } from '../hooks/useProducts';
 import { motion } from 'framer-motion';
@@ -6,13 +6,39 @@ import { AddProductModal } from '../components/AddProductModal';
 import { RestockModal } from '../components/RestockModal';
 import { EditProduct } from '../components/EditProduct';
 import { Product } from '../types';
+import { useSearchParams } from 'react-router-dom';
+import { InfoTip } from '../components/InfoTip';
 
 export function InventoryPage() {
     const { data: products, isLoading } = useProducts();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [searchTerm, setSearchTerm] = useState('');
-    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-    const [isRestockModalOpen, setIsRestockModalOpen] = useState(false);
+    const [isAddModalOpen, setIsAddModalOpen] = useState(searchParams.get('add') === '1');
+    const [isRestockModalOpen, setIsRestockModalOpen] = useState(searchParams.get('restock') === '1');
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+
+    useEffect(() => {
+        setIsAddModalOpen(searchParams.get('add') === '1');
+        setIsRestockModalOpen(searchParams.get('restock') === '1');
+    }, [searchParams]);
+
+    const closeAddModal = () => {
+        setIsAddModalOpen(false);
+        if (searchParams.get('add') === '1') {
+            const nextParams = new URLSearchParams(searchParams);
+            nextParams.delete('add');
+            setSearchParams(nextParams, { replace: true });
+        }
+    };
+
+    const closeRestockModal = () => {
+        setIsRestockModalOpen(false);
+        if (searchParams.get('restock') === '1') {
+            const nextParams = new URLSearchParams(searchParams);
+            nextParams.delete('restock');
+            setSearchParams(nextParams, { replace: true });
+        }
+    };
 
     const filteredProducts = products?.filter((product) =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -26,7 +52,13 @@ export function InventoryPage() {
         <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Inventory</h1>
+                    <div className="flex items-center gap-2">
+                        <h1 className="text-3xl font-bold text-gray-900">Inventory</h1>
+                        <InfoTip
+                            title="Inventory tips"
+                            content="Add products first, then restock them. Products with stock under 5 are highlighted so you can refill quickly."
+                        />
+                    </div>
                     <p className="text-gray-500">Manage your stock levels and prices.</p>
                 </div>
                 <div className="flex gap-2">
@@ -105,11 +137,11 @@ export function InventoryPage() {
 
             <AddProductModal
                 isOpen={isAddModalOpen}
-                onClose={() => setIsAddModalOpen(false)}
+                onClose={closeAddModal}
             />
             <RestockModal
                 isOpen={isRestockModalOpen}
-                onClose={() => setIsRestockModalOpen(false)}
+                onClose={closeRestockModal}
                 products={products || []}
             />
             {editingProduct && (

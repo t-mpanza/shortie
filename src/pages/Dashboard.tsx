@@ -3,6 +3,8 @@ import { TrendingUp, Package, DollarSign, ShoppingCart, Plus } from 'lucide-reac
 import { Link } from 'react-router-dom';
 import { useProductMetrics } from '../hooks/useProducts';
 import { useRecentSales } from '../hooks/useSales';
+import { FirstTimeSetupGuide } from '../components/FirstTimeSetupGuide';
+import { InfoTip } from '../components/InfoTip';
 
 
 export function DashboardPage() {
@@ -12,6 +14,8 @@ export function DashboardPage() {
     const totalRevenue = metrics?.reduce((sum, p) => sum + p.total_revenue, 0) || 0;
     const totalProfit = metrics?.reduce((sum, p) => sum + p.profit, 0) || 0;
     const totalProducts = metrics?.length || 0;
+    const hasStock = (metrics?.some(p => p.current_stock > 0) ?? false);
+    const hasSales = (recentSales?.length ?? 0) > 0;
 
     const cardVariants = {
         hidden: { opacity: 0, y: 20 },
@@ -26,17 +30,54 @@ export function DashboardPage() {
         <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex flex-col gap-2">
-                    <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+                    <div className="flex items-center gap-2">
+                        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+                        <InfoTip
+                            title="Quick setup flow"
+                            content="For first-time setup: 1) Add product, 2) Restock inventory, 3) Record sale. Use the Setup Guide button if you hide onboarding."
+                        />
+                    </div>
                     <p className="text-gray-500">Welcome back to your stall overview.</p>
                 </div>
-                <Link
-                    to="/pos"
-                    className="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 hover:shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2"
-                >
-                    <Plus className="w-5 h-5" />
-                    New Sale
-                </Link>
+                <div className="flex items-center gap-2">
+                    <Link
+                        to="/inventory?add=1"
+                        className="bg-white text-blue-700 border border-blue-200 px-4 py-3 rounded-xl font-semibold hover:bg-blue-50 active:scale-95 transition-all flex items-center justify-center gap-2"
+                    >
+                        <Package className="w-5 h-5" />
+                        Add Product
+                    </Link>
+                    <Link
+                        to="/pos"
+                        className="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 hover:shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2"
+                    >
+                        <Plus className="w-5 h-5" />
+                        New Sale
+                    </Link>
+                </div>
             </div>
+
+            {totalProducts === 0 && (
+                <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <h2 className="font-bold text-amber-900">Start by adding your first product</h2>
+                        <p className="text-sm text-amber-800">You need at least one product before recording sales.</p>
+                    </div>
+                    <Link
+                        to="/inventory?add=1"
+                        className="bg-amber-600 text-white px-4 py-2.5 rounded-xl font-semibold hover:bg-amber-700 active:scale-95 transition-all inline-flex items-center justify-center gap-2"
+                    >
+                        <Plus className="w-4 h-4" />
+                        Add First Product
+                    </Link>
+                </div>
+            )}
+
+            <FirstTimeSetupGuide
+                hasProducts={totalProducts > 0}
+                hasStock={hasStock}
+                hasSales={hasSales}
+            />
 
             {/* Metrics Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
