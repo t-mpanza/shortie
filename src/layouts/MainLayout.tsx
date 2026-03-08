@@ -2,6 +2,7 @@ import { Outlet, NavLink } from 'react-router-dom';
 import { LayoutDashboard, Package, ShoppingCart, History, Settings } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { PWAManager } from '../components/PWAManager';
 
 function cn(...inputs: (string | undefined | null | false)[]) {
     return twMerge(clsx(inputs));
@@ -18,6 +19,7 @@ export function MainLayout() {
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
+            <PWAManager />
             {/* Desktop Sidebar */}
             <aside className="hidden md:flex flex-col w-64 bg-white border-r border-gray-200 p-4">
                 <div className="flex items-center gap-2 mb-8 px-2">
