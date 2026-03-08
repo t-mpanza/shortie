@@ -151,7 +151,7 @@ export function POSPage() {
                         initial={{ y: 100 }}
                         animate={{ y: 0 }}
                         exit={{ y: 100 }}
-                        className="fixed bottom-[70px] md:bottom-6 left-0 right-0 p-4 z-20 pointer-events-none"
+                        className="fixed bottom-24 md:bottom-6 left-0 right-0 p-4 z-20 pointer-events-none"
                     >
                         <div className="max-w-2xl mx-auto pointer-events-auto">
                             <button
@@ -190,7 +190,7 @@ export function POSPage() {
                             animate={{ y: 0 }}
                             exit={{ y: "100%" }}
                             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                            className="fixed bottom-0 left-0 right-0 bg-white z-50 rounded-t-3xl shadow-2xl max-h-[85vh] flex flex-col md:max-w-2xl md:mx-auto md:bottom-4 md:rounded-3xl"
+                            className="fixed bottom-0 left-0 right-0 bg-white z-[60] rounded-t-3xl shadow-2xl max-h-[85vh] flex flex-col md:max-w-2xl md:mx-auto md:bottom-4 md:rounded-3xl"
                         >
                             {/* Handle Bar (Visual cue for dragging) */}
                             <div className="w-full flex justify-center pt-3 pb-1" onClick={() => setIsCartOpen(false)}>

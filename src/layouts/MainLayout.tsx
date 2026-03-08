@@ -50,12 +50,12 @@ export function MainLayout() {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 overflow-y-auto pb-20 md:pb-0">
+            <main className="flex-1 overflow-y-auto pb-24 md:pb-0">
                 <Outlet />
             </main>
 
             {/* Mobile Bottom Navigation */}
-            <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 z-50">
+            <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] z-50">
                 <div className="flex justify-around items-center">
                     {navItems.map((item) => (
                         <NavLink

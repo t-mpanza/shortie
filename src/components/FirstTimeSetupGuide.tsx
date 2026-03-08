@@ -108,7 +108,7 @@ export function FirstTimeSetupGuide({ hasProducts, hasStock, hasSales }: FirstTi
                             animate={{ y: 0 }}
                             exit={{ y: '100%' }}
                             transition={{ type: 'spring', damping: 28, stiffness: 260 }}
-                            className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-3xl border-t border-gray-200 shadow-2xl max-h-[80vh] overflow-y-auto"
+                            className="fixed bottom-0 left-0 right-0 z-[60] bg-white rounded-t-3xl border-t border-gray-200 shadow-2xl max-h-[80vh] overflow-y-auto"
                         >
                             <div className="p-5 pb-4 border-b border-gray-100">
                                 <div className="flex items-start justify-between gap-4">
